@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <!--
+      Notice the use of %PUBLIC_URL% in the tag above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+</head>
+
+<body>
+
+    <div id="root"></div>
+    <div><a href="http://www.ruanyifeng.com/blog/2015/03/react.html">React 入门实例教程-阮一峰</a></div>
+    <hr>    
+    <xmp>
+        //3、JSX 语法 
+        class T3 extends Component {
+            render() {
+                return (
+                    <div>
+                        {names.map(function (name) {
+                            return (<div key={name}>hello,{name}!</div>)
+                        })}
+                    </div>
+                );
+            }
+        }
+    </xmp>
+    <div id="t3">t3</div>
+    
+    <hr>
+    <xmp>
+         //4、组件、传递参数
+        class T4 extends Component{
+            render(){
+                return <h1>Hello {this.props.name}</h1>;
+            }
+        }
+    </xmp>
+    <div id="t4">t4</div>
+
+    <hr>
+    <xmp>        
+        //5、this.props.children 遍历子元素
+        class T5 extends Component {
+            render() {
+                return (
+                    <ol>
+                        {React.Children.map(this.props.children, function (child) {
+                            return <li>{child}</li>;
+                        })}
+                    </ol>
+                );
+            }
+        }       
+    </xmp>
+    <div id="t5">t5</div>
+    <hr>
+
+    <xmp>
+        //6、PropTypes，注意与原文区别
+        class T6 extends Component {
+            //注意定义为static变量，与类外部定义defaultProps\propTypes方法效果一样
+            static defaultProps = {
+                title: 'eeee'
+            }
+            static propTypes = {
+                title: PropTypes.string.isRequired
+            }
+            render() {
+                return <h1>{this.props.title}</h1>;
+            }
+        }
+
+        /*
+        与类内部定义静态变量defaultProps\propTypes效果一样
+        T6.propTypes = {
+            title: PropTypes.string.isRequired
+        };
+
+        T6.defaultProps = {
+            title: 'ddddd'
+        } 
+        */       
+    </xmp>
+    <div id="t6">t6</div>
+    <hr>
+
+    <xmp>
+        //7、通过 ref 属性获取dom实例 
+        class T7 extends Component {
+            handleClick() {
+                this
+                    .refs
+                    .myTextInput
+                    .focus();
+                // this.handleClick = this.handleClick.bind(this); 如果这样用在下面可以直接写成
+                // onClick={this.handleClick}
+            }
+            render() {
+                //使用ES6 class语法创建组件， class中的方法不会自动将this绑定到实例中。必须使用 .bind(this)或者 箭头函数 ＝>来进行手动绑定。
+                return (
+                    <div><input type="text" ref="myTextInput"/>
+                        <input
+                            type="button"
+                            value="Focus the text input"
+                            onClick={this
+                            .handleClick
+                            .bind(this)}/>
+                    </div>
+                )
+            }
+        }
+    </xmp>
+    <div id="t7">t7</div>
+
+    <hr>
+    <xmp>
+        //8、组件状态this.state
+        class T8 extends Component {
+        //使用ES6 class语法创建组件，初始化state的工作要在constructor中完成。不需要再调用getInitialState方法。
+            /*getInitialState() {
+                return { liked: false };
+            }*/
+            constructor(props){
+                super(props);
+                this.state={liked:false};
+            }
+            handleClick() {        
+                this.setState({ liked: !this.state.liked });             
+            }
+            render() {
+                var text = this.state.liked ? 'like' : 'haven\'t liked';      
+                return (
+                    <p onClick={this.handleClick.bind(this)}>
+                        You {text} this. Click to toggle.
+            </p>
+                );
+            }
+        }
+    </xmp>
+    <div id="t8">t8</div>
+
+    <hr>
+    <xmp>
+        //9、获取事件及用户输入信息 
+        class T9 extends Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    value: 'Hello!'
+                };
+                this.handleChange=this.handleChange.bind(this);
+            }    
+            handleChange(event) {       
+                this.setState({value: event.target.value});
+            }
+            render() {
+                var value = this.state.value;
+                return (
+                    <div><input
+                        type="text"
+                        value={value}
+                        onChange={this
+                        .handleChange
+                        }/>
+                        <p>{value}</p>
+                    </div>
+                )
+            }
+        }
+    </xmp>
+    <div id="t9">t9</div>
+    <hr>
+    <xmp>
+        //10、组件的生命周期
+        class T10 extends Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    opacity: 1.0
+                };
+            }
+            componentDidMount() {
+            setInterval(function(){            
+                    var opacity = this.state.opacity;
+                    opacity -= 0.05;
+                    if (opacity < 0.1) 
+                        opacity = 1.0;
+                    this.setState({opacity: opacity})}.bind(this),100);
+            
+            }
+            render() {        
+                return (
+                    <div style={{
+                        opacity: this.state.opacity
+                    }}>hello,{this.props.name}!</div>
+                );
+            }
+        }
+    </xmp>
+    <div id="t10">t10</div>
+    <hr>
+    <xmp>
+    //11、ajax
+        class T11 extends Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    userName: '',
+                    lastGistUrl: ''
+                };
+            };
+            componentDidMount() {
+                $
+                    .get(this.props.source, function (result) {
+                        var lastGist = result[0];
+
+                        this.setState({userName: lastGist.owner.login, lastGistUrl: lastGist.html_url});
+
+                    }.bind(this));
+            };
+            render() {
+                return (
+                    <div>{this.state.userName}'s last gist is 
+                        <a href={this.state.lastGistUrl}>here</a>.</div>
+                );
+            }
+        }
+    </xmp>
+    <div id="t11">t11</div>
+    <hr>
+    <xmp>
+        //12、ajax，Promise作为参数
+        class T12 extends Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    loading: true,
+                    error: null,
+                    data: null
+                };
+            }
+            componentDidMount() {
+                this
+                    .props
+                    .promise
+                    .then(value => this.setState({loading: false, data: value}), error => this.setState({loading: false, error: error}));
+            }
+            render() {
+                if (this.state.loading) {
+                    return <span>Loading...</span>;
+                } else if (this.state.error != null) {
+                    return <span>Error:{this.state.error.message}</span>;
+                } else {
+                    var repos = this.state.data.items;
+                    var repoList = repos.map(function (repo) {
+                        return (
+                            <li>
+                                <a href={repo.html_url}>{repo.name}</a>
+                                ({repo.stargazers_count}
+                                stars)
+                                <br/> {repo.description}
+                            </li>
+                        );
+                    });
+                }
+                return (
+                    <main>
+                        <h1>Most Popular JavaScript Projects in Github</h1>
+                        <ol>{repoList}</ol>
+                    </main>
+                );
+            }
+        }
+    </xmp>
+    <div id="t12">t12</div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start`.
+      To create a production bundle, use `npm run build`.
+    -->
+
+</body>
+
+</html>
